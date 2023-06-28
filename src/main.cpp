@@ -6,7 +6,7 @@
 #include "test.h"
 #endif
 
-int main(int argc, char *argv[]) {
+int main(int argc, const char *argv[]) {
     Command command = parseArgs(argc, argv);
     command.showCommand();
 }

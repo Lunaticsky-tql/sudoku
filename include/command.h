@@ -83,7 +83,7 @@ public:
         this->holeRange = holeRange;
     }
 
-    void showCommand() {
+    void showCommand() const {
         switch(gameType) {
             case GENERATE_SOLUTION_MAP:
                 std::cout << "Command: generate solution map" << std::endl;
@@ -113,7 +113,7 @@ public:
 
 };
 
-Command parseArgs(int argc, char *argv[]) {
+Command parseArgs(int argc, const char *argv[]) {
     try {
         if (argc <= 1) {
             throw ParseArgException("No argument provided!\nUsage: sudoku.exe <command> [options]");
@@ -175,12 +175,11 @@ Command parseArgs(int argc, char *argv[]) {
         } else {
             throw ParseArgException("Invalid command provided\nUsage: sudoku.exe <command> [options]");
         }
-
     }
     catch (std::exception &e) {
         print_error(e.what());
-
-        exit(0);
+        throw ParseArgException("Parse argument failed!");
+//        exit(0);
     }
     return {0, 0};
 }

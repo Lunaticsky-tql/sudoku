@@ -2,13 +2,12 @@
 #include<cstring>
 #include <string>
 #include "command.h"
-
-
-
-Command parseCommand(int argc, char *argv[]);
+#if defined TEST
+#include "test.h"
+#endif
 
 int main(int argc, char *argv[]) {
-    std::cout<<"hello world"<<std::endl;
-    Command command = parseCommand(argc, argv);
+    Command command = parseArgs(argc, argv);
+    command.showCommand();
 }
 

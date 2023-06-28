@@ -12,7 +12,7 @@ TEST(ExceptionTest, TestInvalidArgs) {
     EXPECT_THROW(parseArgs(3, argv1), ParseArgException);
 }
 
-TEST(ExceptionTest, TestInvalidArgs) {
+TEST(GenerateTest, TestMaps) {
     int n = 10;
     for(n=10;n<=40;n+=5)
     {

@@ -6,7 +6,7 @@
 #include <fstream>
 #include"exception.h"
 #include "color_print.h"
-
+#include"basic.h"
 #endif
 enum GameType {
     GENERATE_SOLUTION_MAP,
@@ -19,9 +19,9 @@ enum GameDifficulty {
     HARD
 };
 
-int parseNumber(const std::string &s) {
+int parseNumber(const std::string& s) {
     int number = 0;
-    for (char i: s) {
+    for (char i : s) {
         if (i < '0' || i > '9') {
             throw ParseArgException("Invalid number provided\nUsage: sudoku.exe -c <number>");
         }
@@ -30,11 +30,11 @@ int parseNumber(const std::string &s) {
     return number;
 }
 
-std::pair<int, int> parseRange(const std::string &s) {
+std::pair<int, int> parseRange(const std::string& s) {
     int start = 0;
     int end = 0;
     bool isStart = true;
-    for (char i: s) {
+    for (char i : s) {
         if (i == '~') {
             isStart = false;
             continue;
@@ -44,11 +44,12 @@ std::pair<int, int> parseRange(const std::string &s) {
         }
         if (isStart) {
             start = start * 10 + (i - '0');
-        } else {
+        }
+        else {
             end = end * 10 + (i - '0');
         }
     }
-    return {start, end};
+    return { start, end };
 }
 
 class Command {
@@ -84,36 +85,43 @@ public:
     }
 
     void showCommand() const {
-        switch(gameType) {
-            case GENERATE_SOLUTION_MAP:
-                std::cout << "Command: generate solution map" << std::endl;
-                std::cout << "Number: " << gameNumber << std::endl;
-                break;
-            case SOLVE_SUDOKU:
-                std::cout << "Command: solve sudoku" << std::endl;
-                std::cout << "File path: " << filePath << std::endl;
-                break;
-            case GENERATE_SUDOKU:
-                std::cout << "Command: generate sudoku" << std::endl;
-                std::cout << "Number: " << gameNumber << std::endl;
-                if (isUnique) {
-                    std::cout << "Unique: true" << std::endl;
-                } else if (gameDifficulty == EASY) {
-                    std::cout << "Difficulty: easy" << std::endl;
-                } else if (gameDifficulty == MEDIUM) {
-                    std::cout << "Difficulty: medium" << std::endl;
-                } else if (gameDifficulty == HARD) {
-                    std::cout << "Difficulty: hard" << std::endl;
-                } else {
-                    std::cout << "Hole range: " << holeRange.first << "~" << holeRange.second << std::endl;
-                }
-                break;
+        switch (gameType) {
+        case GENERATE_SOLUTION_MAP:
+            std::cout << "Command: generate solution map" << std::endl;
+            std::cout << "Number: " << gameNumber << std::endl;
+            mapGenerate(gameNumber);
+            cout << "The sudoku solution map is in the "<< SUDOKUPATH <<"\n"
+                << "Have a check\n";
+            break;
+        case SOLVE_SUDOKU:
+            std::cout << "Command: solve sudoku" << std::endl;
+            std::cout << "File path: " << filePath << std::endl;
+            break;
+        case GENERATE_SUDOKU:
+            std::cout << "Command: generate sudoku" << std::endl;
+            std::cout << "Number: " << gameNumber << std::endl;
+            if (isUnique) {
+                std::cout << "Unique: true" << std::endl;
+            }
+            else if (gameDifficulty == EASY) {
+                std::cout << "Difficulty: easy" << std::endl;
+            }
+            else if (gameDifficulty == MEDIUM) {
+                std::cout << "Difficulty: medium" << std::endl;
+            }
+            else if (gameDifficulty == HARD) {
+                std::cout << "Difficulty: hard" << std::endl;
+            }
+            else {
+                std::cout << "Hole range: " << holeRange.first << "~" << holeRange.second << std::endl;
+            }
+            break;
         }
     }
 
 };
 
-Command parseArgs(int argc, const char *argv[]) {
+Command parseArgs(int argc, const char* argv[]) {
     try {
         if (argc <= 1) {
             throw ParseArgException("No argument provided!\nUsage: sudoku.exe <command> [options]");
@@ -128,8 +136,9 @@ Command parseArgs(int argc, const char *argv[]) {
             if (num < 1 || num > 1000000) {
                 throw ParseArgException("Solution number should be between 1 and 1000000!");
             }
-            return {GENERATE_SOLUTION_MAP, num};
-        } else if (firstArg == "-s") {
+            return { GENERATE_SOLUTION_MAP, num };
+        }
+        else if (firstArg == "-s") {
             if (argc <= 2) {
                 throw ParseArgException("No file path provided\nUsage: sudoku.exe -s <file path>");
             }
@@ -139,8 +148,9 @@ Command parseArgs(int argc, const char *argv[]) {
             if (!file) {
                 throw ParseArgException("File not found!");
             }
-            return {SOLVE_SUDOKU, filePath};
-        } else if (firstArg == "-n") {
+            return { SOLVE_SUDOKU, filePath };
+        }
+        else if (firstArg == "-n") {
             if (argc <= 2) {
                 throw ParseArgException("No number provided\nUsage: sudoku.exe -n <number>");
             }
@@ -152,34 +162,37 @@ Command parseArgs(int argc, const char *argv[]) {
             if (argc -= 3, argc) {
                 std::string thirdArg = argv[3];
                 if (thirdArg == "-u") {
-                    return {GENERATE_SUDOKU, num, true};
-                } else if (thirdArg == "-m") {
+                    return { GENERATE_SUDOKU, num, true };
+                }
+                else if (thirdArg == "-m") {
                     if (--argc) {
                         std::string fourthArg = argv[4];
                         int difficulty = parseNumber(fourthArg);
                         if (difficulty < EASY || difficulty > HARD) {
                             throw ParseArgException("Difficulty should be between 1 and 3!");
                         }
-                        return {GENERATE_SUDOKU, num, difficulty};
+                        return { GENERATE_SUDOKU, num, difficulty };
                     }
                     throw ParseArgException("No difficulty provided\nUsage: sudoku.exe -n <number> -m <difficulty>");
-                } else if (thirdArg == "-r") {
+                }
+                else if (thirdArg == "-r") {
                     // hole number ,eg: "20~55"
                     if (--argc) {
                         std::string fourthArg = argv[4];
-                        return {GENERATE_SUDOKU, num, parseRange(fourthArg)};
+                        return { GENERATE_SUDOKU, num, parseRange(fourthArg) };
                     }
                     throw ParseArgException("No range provided\nUsage: sudoku.exe -n <number> -r xx~xx");
                 }
             }
-        } else {
+        }
+        else {
             throw ParseArgException("Invalid command provided\nUsage: sudoku.exe <command> [options]");
         }
     }
-    catch (std::exception &e) {
+    catch (std::exception& e) {
         print_error(e.what());
         throw ParseArgException("Parse argument failed!");
-//        exit(0);
+        //        exit(0);
     }
-    return {0, 0};
+    return { 0, 0 };
 }

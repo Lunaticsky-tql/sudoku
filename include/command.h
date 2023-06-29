@@ -13,7 +13,8 @@ enum GameType {
     GENERATE_SUDOKU
 };
 enum GameDifficulty {
-    EASY = 1,
+    DEFAULT,
+    EASY,
     MEDIUM,
     HARD
 };
@@ -54,10 +55,10 @@ class Command {
 public:
     int gameNumber{};
     int gameType;
-    int gameDifficulty = EASY;
-    std::string filePath="sudoku.txt";
+    int gameDifficulty = DEFAULT;
+    std::string filePath = "sudoku.txt";
     bool isUnique = false;
-    std::pair<int, int> holeRange;
+    std::pair<int, int> holeRange{0, 0};
 
     Command(int gameType, int gameNumber, bool isUnique = false) {
         this->gameType = gameType;
@@ -97,14 +98,20 @@ public:
                 std::cout << "Number: " << gameNumber << std::endl;
                 if (isUnique) {
                     std::cout << "Unique: true" << std::endl;
-                } else if (gameDifficulty == EASY) {
+                }
+                else if(holeRange.first){
+                    std::cout << "Hole range: " << holeRange.first << "~" << holeRange.second << std::endl;
+                }
+                else if (gameDifficulty == DEFAULT)
+                {
+                    std::cout << "Difficulty: default" << std::endl;
+                }
+                else if (gameDifficulty == EASY) {
                     std::cout << "Difficulty: easy" << std::endl;
                 } else if (gameDifficulty == MEDIUM) {
                     std::cout << "Difficulty: medium" << std::endl;
                 } else if (gameDifficulty == HARD) {
                     std::cout << "Difficulty: hard" << std::endl;
-                } else {
-                    std::cout << "Hole range: " << holeRange.first << "~" << holeRange.second << std::endl;
                 }
                 break;
         }
@@ -171,7 +178,7 @@ Command parseArgs(int argc, const char *argv[]) {
                     throw ParseArgException("No range provided\nUsage: sudoku.exe -n <number> -r xx~xx");
                 }
             }
-            return {GENERATE_SUDOKU, num, EASY};
+            return {GENERATE_SUDOKU, num, DEFAULT};
         } else {
             throw ParseArgException("Invalid command provided\nUsage: sudoku.exe <command> [options]");
         }
@@ -183,43 +190,36 @@ Command parseArgs(int argc, const char *argv[]) {
 }
 
 void distributeTask(const Command &command) {
+    bool success=false;
     switch (command.gameType) {
         case GENERATE_SOLUTION_MAP:
-//            if (mapGenerate(command.gameNumber)) {
-//                std::cout << "Solution map generated successfully!" << std::endl;
-//                std::cout << "Please check " << SOLUTION_MAP_PATH << std::endl;
-//            }
-            if(writeBoards2File(mapGenerate(command.gameNumber), command.filePath)) {
-                std::cout << "Solution map generated successfully!" << std::endl;
-                std::cout << "Please check " << SOLUTION_MAP_PATH << std::endl;
-            }
+            success=writeBoards2File(mapGenerate(command.gameNumber), command.filePath);
             break;
         case GENERATE_SUDOKU:
-//            mapGenerate(command.gameNumber);
-//            if (command.isUnique) {
-//
-//            } else if (command.gameDifficulty == EASY) {
-//                if (generateQuesN(command.gameNumber)) {
-//                    std::cout << "Question generated successfully!" << std::endl;
-//                    std::cout << "Please check " << QUESTION_PATH << std::endl;
-//                }
-//            } else if (command.gameDifficulty == MEDIUM) {
-//                if (generateQuesM(command.gameNumber, MEDIUM)) {
-//                    std::cout << "Question generated successfully!" << std::endl;
-//                    std::cout << "Please check " << QUESTION_PATH << std::endl;
-//                }
-//            } else if (command.gameDifficulty == HARD) {
-//                if (generateQuesM(command.gameNumber, HARD)) {
-//                    std::cout << "Question generated successfully!" << std::endl;
-//                    std::cout << "Please check " << QUESTION_PATH << std::endl;
-//                }
-//            } else {
-//                //std::cout << "Hole range: " << command.holeRange.first << "~" << command.holeRange.second << std::endl;
-//            }
+
+            if (command.holeRange.first) {
+                success=writeBoards2File(
+                        generateGame(mapGenerate(command.gameNumber), command.holeRange.first, command.holeRange.second,
+                                     command.isUnique), command.filePath);
+            } else if (command.gameDifficulty == EASY) {
+                success=writeBoards2File(generateGame(mapGenerate(command.gameNumber), 20, 32, command.isUnique),
+                                 command.filePath);
+            } else if (command.gameDifficulty == MEDIUM) {
+                success=writeBoards2File(generateGame(mapGenerate(command.gameNumber), 32, 45, command.isUnique),
+                                 command.filePath);
+            } else if (command.gameDifficulty == HARD) {
+                success=writeBoards2File(generateGame(mapGenerate(command.gameNumber), 45, 55, command.isUnique),
+                                 command.filePath);
+            } else {
+                success=writeBoards2File(generateGame(mapGenerate(command.gameNumber), 20, 55, command.isUnique),
+                                 command.filePath);
+            }
             break;
         default:
             break;
-
+    }
+    if(success){
+        print_success("Solution map generated successfully!");
     }
 }
 

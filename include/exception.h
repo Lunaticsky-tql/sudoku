@@ -5,7 +5,6 @@
 #ifndef SUDOKU_EXCEPTION_H
 #define SUDOKU_EXCEPTION_H
 
-#endif //SUDOKU_EXCEPTION_H
 #include<exception>
 // some definitions for Exception class to use
 class Exception : public std::exception {
@@ -44,4 +43,4 @@ public:
     }
 };
 
-
+#endif //SUDOKU_EXCEPTION_H

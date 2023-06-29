@@ -4,8 +4,8 @@
 
 #ifndef SUDOKU_COLOR_PRINT_H
 #define SUDOKU_COLOR_PRINT_H
-#ifdef _WIN32
 
+#ifdef _WIN32
 #include <iostream>
 #endif
 enum ConsoleColor {
@@ -13,9 +13,7 @@ enum ConsoleColor {
     WARNING = 6,
     INFO = 7,
 };
-#endif //SUDOKU_COLOR_PRINT_H
-
-void color_print(const char *s, int color) {
+inline void color_print(const char *s, int color) {
     switch (color) {
         case ERR:
             std::cerr << "\033[31m" << s << "\033[0m";
@@ -31,8 +29,9 @@ void color_print(const char *s, int color) {
     }
 }
 
-void print_error(const char *s) {
+inline void print_error(const char *s) {
     color_print("[ERROR] ", ERR);
     color_print(s, ERR);
     std::cerr << std::endl;
 }
+#endif //SUDOKU_COLOR_PRINT_H

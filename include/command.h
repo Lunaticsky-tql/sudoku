@@ -56,7 +56,7 @@ public:
     int gameNumber{};
     int gameType;
     int gameDifficulty = DEFAULT;
-    std::string filePath = "sudoku.txt";
+    std::string filePath = SOLUTION_MAP_PATH;
     bool isUnique = false;
     std::pair<int, int> holeRange{0, 0};
 
@@ -160,9 +160,11 @@ Command parseArgs(int argc, const char *argv[]) {
                 if (thirdArg == "-u") {
                     return {GENERATE_SUDOKU, num, true};
                 } else if (thirdArg == "-m") {
+                    std::cout<<"m";
                     if (--argc) {
                         std::string fourthArg = argv[4];
                         int difficulty = parseNumber(fourthArg);
+                        std::cout<<"diff"<<difficulty;
                         if (difficulty < EASY || difficulty > HARD) {
                             throw ParseArgException("Difficulty should be between 1 and 3!");
                         }
@@ -173,7 +175,11 @@ Command parseArgs(int argc, const char *argv[]) {
                     // hole number ,eg: "20~55"
                     if (--argc) {
                         std::string fourthArg = argv[4];
-                        return {GENERATE_SUDOKU, num, parseRange(fourthArg)};
+                        std::pair startEnd = parseRange(fourthArg);
+                        if (startEnd.first < 20 || startEnd.second > 55) {
+                            throw ParseArgException("Hole number should be between 20 and 55!");
+                        }
+                        return {GENERATE_SUDOKU, num, startEnd};
                     }
                     throw ParseArgException("No range provided\nUsage: sudoku.exe -n <number> -r xx~xx");
                 }
@@ -189,14 +195,13 @@ Command parseArgs(int argc, const char *argv[]) {
     }
 }
 
-void distributeTask(const Command &command) {
+bool distributeTask(const Command &command) {
     bool success=false;
     switch (command.gameType) {
         case GENERATE_SOLUTION_MAP:
             success=writeBoards2File(mapGenerate(command.gameNumber), command.filePath);
             break;
         case GENERATE_SUDOKU:
-
             if (command.holeRange.first) {
                 success=writeBoards2File(
                         generateGame(mapGenerate(command.gameNumber), command.holeRange.first, command.holeRange.second,
@@ -205,15 +210,18 @@ void distributeTask(const Command &command) {
                 success=writeBoards2File(generateGame(mapGenerate(command.gameNumber), 20, 32, command.isUnique),
                                  command.filePath);
             } else if (command.gameDifficulty == MEDIUM) {
-                success=writeBoards2File(generateGame(mapGenerate(command.gameNumber), 32, 45, command.isUnique),
+                success=writeBoards2File(generateGame(mapGenerate(command.gameNumber), 33, 45, command.isUnique),
                                  command.filePath);
             } else if (command.gameDifficulty == HARD) {
-                success=writeBoards2File(generateGame(mapGenerate(command.gameNumber), 45, 55, command.isUnique),
+                success=writeBoards2File(generateGame(mapGenerate(command.gameNumber), 46, 55, command.isUnique),
                                  command.filePath);
             } else {
                 success=writeBoards2File(generateGame(mapGenerate(command.gameNumber), 20, 55, command.isUnique),
                                  command.filePath);
             }
+            break;
+        case SOLVE_SUDOKU:
+            success=writeAnswers2File(solveSudoku(readBoardsFromFile(command.filePath)));
             break;
         default:
             break;
@@ -221,6 +229,7 @@ void distributeTask(const Command &command) {
     if(success){
         print_success("Solution map generated successfully!");
     }
+    return success;
 }
 
 #endif

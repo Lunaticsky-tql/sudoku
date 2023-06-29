@@ -1359,8 +1359,8 @@ AssertionResult CmpHelperEQFailure(const char* lhs_expression,
                    FormatForComparisonFailureMessage(rhs, lhs), false);
 }
 
-// This block of code defines operator==/!=
-// to block lexical scope lookup.
+// This block_state of code defines operator==/!=
+// to block_state lexical scope lookup.
 // It prevents using invalid operator==/!= defined at namespace scope.
 struct faketype {};
 inline bool operator==(faketype, faketype) { return true; }
@@ -2090,7 +2090,7 @@ class GTEST_API_ ScopedTrace {
 //
 // In the implementation, we include the current line number as part
 // of the dummy variable name, thus allowing multiple SCOPED_TRACE()s
-// to appear in the same block - as long as they are on different
+// to appear in the same block_state - as long as they are on different
 // lines.
 //
 // Assuming that each thread maintains its own stack of traces.

@@ -5,6 +5,7 @@
 #include<fstream>
 #include<cstring>
 #include <random>
+#include <iostream>
 
 constexpr int BOARD_SIZE = 9;
 constexpr int BOX_SIZE = 3;
@@ -30,8 +31,12 @@ public:
     Board() {
         memset(pos, 0, sizeof(pos));
     }
+    //copy constructor
+    Board(const Board &board) {
+        memcpy(pos, board.pos, sizeof(pos));
+    }
 
-    void printBoard(std::ofstream &file) const {
+    void writeBoard(std::ofstream &file) const {
         for (auto &po: pos) {
             for (int j: po) {
                 if (j == 0)
@@ -55,7 +60,19 @@ public:
             }
         }
     }
+    void printBoard(){
+        for (auto &po: pos) {
+            for (int j: po) {
+                if (j == 0)
+                    std::cout << '$' << ' ';
+                else
+                    std::cout << j << ' ';
+            }
+            std::cout << '\n';
+        }
+        std::cout << '\n';
 
+    }
     void swapRowsInBox(int boxRow) {
         int row1 = (boxRow * BOX_SIZE) + rd0to2();
         int row2 = (boxRow * BOX_SIZE) + rd0to2();
@@ -89,6 +106,16 @@ public:
     }
     int *operator[](int i) {
         return pos[i];
+    }
+    bool operator==(const Board &board) const {
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; ++j) {
+                if (pos[i][j] != board.pos[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 };
 

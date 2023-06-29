@@ -27,6 +27,7 @@ bool writeBoards2File(const vector<Board> &boards, const std::string& path) {
         if (!fp.is_open()) {
             throw std::ifstream::failure("open file failed");
         }
+        fp << boards.size() << '\n';
         for (auto &board: boards) {
             board.printBoard(fp);
         }

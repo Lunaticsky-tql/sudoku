@@ -5,7 +5,7 @@
 #include "gtest/gtest.h"
 #include "command.h"
 
-bool testLegalSolutionMap(Board board){
+bool testLegalSolutionMap(Board board) {
     int i, j, k, l, m;
     for (i = 0; i < 9; i++) {
         for (j = 1; j <= 9; j++) {
@@ -31,7 +31,6 @@ bool testLegalSolutionMap(Board board){
         }
 
     }
-
     for (i = 0; i < 9; i += 3) {
         for (j = 0; j < 9; j += 3) {
             for (k = 1; k <= 9; k++) {
@@ -47,12 +46,12 @@ bool testLegalSolutionMap(Board board){
                     print_error("Board Error:3*3 Error\n");
                     return false;
                 }
-
             }
         }
     }
     return true;
 }
+
 TEST(ExceptionTest, TestInvalidArgs) {
     EXPECT_THROW(parseArgs(1, nullptr), ParseArgException);
     const char *argv1[2] = {"-c", "99999999"};
@@ -64,6 +63,21 @@ TEST(GenerateMapTest, TestSolutionMap) {
     for (int i = 0; i < 10; i++) {
         EXPECT_TRUE(testLegalSolutionMap(map[i]));
     }
+}
+
+TEST(GenerateMapTest, TestMapReadAndWrite) {
+    vector<Board> map = mapGenerate(10);
+    EXPECT_TRUE(writeBoards2File(map, SOLUTION_MAP_PATH));
+    std::ifstream fp(SOLUTION_MAP_PATH);
+    int size;
+    fp >> size;
+    EXPECT_EQ(size, 10);
+    Board board;
+    for (int i = 0; i < 10; i++) {
+        board.readBoard(fp);
+        EXPECT_TRUE(testLegalSolutionMap(board));
+    }
+
 }
 
 // TEST(GenerateQuestionTest, TestQuestions) {

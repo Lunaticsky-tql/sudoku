@@ -55,7 +55,7 @@ public:
     int gameNumber{};
     int gameType;
     int gameDifficulty = EASY;
-    std::string filePath="sudoku1.txt";
+    std::string filePath="sudoku.txt";
     bool isUnique = false;
     std::pair<int, int> holeRange;
 

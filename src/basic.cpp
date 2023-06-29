@@ -24,9 +24,8 @@ bool mapGenerate(int n) {
     int i, j, k;
     int flag = 0;
     char str[200];
-
-    for (int i = 0; i < 9; i++) {
-        for (int j = 0; j < 17; j++) {
+    for (i = 0; i < 9; i++) {
+        for (j = 0; j < 17; j++) {
             final[i][j] = ' ';
         }
         final[i][17] = '\n';
@@ -34,10 +33,9 @@ bool mapGenerate(int n) {
     }
     final[9][0] = '\n';
     final[9][1] = '\0';
-    FILE* fp = fopen(SUDOKUPATH, "w");
-
+    FILE* fp = fopen(SOLUTION_MAP_PATH, "w");
     do {
-        for (int i = 0; i < 9; i++) {
+        for (i = 0; i < 9; i++) {
             line1[2 * i] = line[i];
         }
         memcpy(final[0], line1, sizeof(line1));
@@ -79,4 +77,5 @@ bool mapGenerate(int n) {
             }
         }
     } while (next_permutation(line + 1, line + 9));
+    return false;
 }

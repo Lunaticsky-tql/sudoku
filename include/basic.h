@@ -1,4 +1,3 @@
-#pragma warning(disable:4996)£»
 #ifndef BASIC
 #define BASIC
 
@@ -17,7 +16,7 @@
 
 using namespace std;
 
-#define SUDOKUPATH  "sudoku.txt"
+#define SOLUTION_MAP_PATH  "sudoku.txt"
 #define MAX 200000000
 
 extern bool mapGenerate(int n);

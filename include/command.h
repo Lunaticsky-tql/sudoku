@@ -1,12 +1,13 @@
+#pragma warning(disable:4996);
 #ifndef COMMAND
 #define COMMAND
 
 #include<string>
 #include <utility>
 #include <fstream>
-#include"exception.h"
+#include "exception.h"
 #include "color_print.h"
-#include"basic.h"
+#include "basic.h"
 
 #endif
 enum GameType {
@@ -89,7 +90,6 @@ public:
             case GENERATE_SOLUTION_MAP:
                 std::cout << "Command: generate solution map" << std::endl;
                 std::cout << "Number: " << gameNumber << std::endl;
-
                 break;
             case SOLVE_SUDOKU:
                 std::cout << "Command: solve sudoku" << std::endl;
@@ -174,6 +174,7 @@ Command parseArgs(int argc, const char *argv[]) {
                     throw ParseArgException("No range provided\nUsage: sudoku.exe -n <number> -r xx~xx");
                 }
             }
+            return { GENERATE_SUDOKU, num };
         } else {
             throw ParseArgException("Invalid command provided\nUsage: sudoku.exe <command> [options]");
         }

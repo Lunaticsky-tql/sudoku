@@ -13,6 +13,7 @@
 #include <regex>
 #include <sstream>
 #include <time.h>
+#include "board.h"
 
 using namespace std;
 

@@ -1,7 +1,11 @@
+#pragma warning(disable:4996);
 #include"basic.h"
 
 static char buf[MAX];
 bool mapGenerate(int n) {
+    int board_num = n;
+    Board* boards = new Board[board_num];
+    int board_id = 0;
     int cot = n;
     buf[0] = '\0';
     int bit = 0;
@@ -24,8 +28,9 @@ bool mapGenerate(int n) {
     int i, j, k;
     int flag = 0;
     char str[200];
-    for (i = 0; i < 9; i++) {
-        for (j = 0; j < 17; j++) {
+
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 17; j++) {
             final[i][j] = ' ';
         }
         final[i][17] = '\n';
@@ -34,8 +39,9 @@ bool mapGenerate(int n) {
     final[9][0] = '\n';
     final[9][1] = '\0';
     FILE* fp = fopen(SOLUTION_MAP_PATH, "w");
+
     do {
-        for (i = 0; i < 9; i++) {
+        for (int i = 0; i < 9; i++) {
             line1[2 * i] = line[i];
         }
         memcpy(final[0], line1, sizeof(line1));
@@ -45,22 +51,35 @@ bool mapGenerate(int n) {
             }
         }
 
+
         for (i = 0; i < 6; i++) {
             for (j = 0; j < 6; j++) {
                 str[0] = '\0';
                 flag++;
+                boards[board_id].initBoard();
                 for (k = 0; k < 3; k++) {
                     strncpy(buf + bit, final[k], 19);
                     bit += 18;
+                    for (int t = 0; t < 9; t++)
+                    {
+                        boards[board_id].pos[k][t] = (int)final[k][2 * t] - '0';
+                    }
                 }
-
                 for (k = 0; k < 3; k++) {
                     strncpy(buf + bit, final[pos1[i][k]], 19);
                     bit += 18;
+                    for (int t = 0; t < 9; t++)
+                    {
+                        boards[board_id].pos[3 + k][t] = (int)final[pos1[i][k]][2 * t] - '0';
+                    }
                 }
                 for (k = 0; k < 3; k++) {
                     strncpy(buf + bit, final[pos2[j][k]], 19);
                     bit += 18;
+                    for (int t = 0; t < 9; t++)
+                    {
+                        boards[board_id].pos[6 + k][t] = (int)final[pos2[i][k]][2 * t] - '0';
+                    }
                 }
                 strncpy(buf + bit, "\n", 1);
                 bit++;
@@ -68,7 +87,9 @@ bool mapGenerate(int n) {
                     buf[163 * (cot - 1) + 161] = '\0';
                     fputs(buf, fp);
                 }
-
+                cout << "id:" << board_id << endl;
+                boards[board_id].testBoard();
+                board_id++;
                 n--;
                 if (!n) {
                     fclose(fp);

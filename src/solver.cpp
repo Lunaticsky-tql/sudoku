@@ -15,6 +15,7 @@ std::vector<Board> SudoSolver::solve(Board &board)
             }
         }
     }
+    dfs(board, 0);
     return results;
 }
 

@@ -16,10 +16,60 @@
 测试用例
 
 ```
-none
-
+    const char *argv10[5] = {"sudoku.exe", "-n", "1000", "-r", "20~60"};
+    EXPECT_THROW(parseArgs(5, argv10), ParseArgException);
 ```
 
+发现一开始忘记对数据范围进行检验，要求里写的清清楚楚。。。
+
+```c++
+    const char *argv8[5] = {"sudoku.exe", "-n", "1000", "-m", "0"};
+    EXPECT_THROW(parseArgs(3, argv8), ParseArgException);
 ```
-add_subdirectory(./googletest)include_directories(${PROJECT_SOURCE_DIR}/src/include ./googletest/include)link_directories(${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/googletest)target_link_libraries(${PROJECT_NAME} gtest)
+
+上面这个更蠢，把测试用例写错了。。
+
+### 游戏生成
+
+这个测试测试生成的数独挖空数是否正确，一开始测试不通过
+
+![image-20230630043652199](README.assets/image-20230630043652199.png)
+
+```c++
+TEST(GenerateGameTest,TestLevel){
+    Command c1(GENERATE_SUDOKU,10,EASY);
+    c1.showCommand();
+    EXPECT_TRUE(distributeTask(c1));
+    std::vector<Board> v;
+    v=readBoardsFromFile(GAME_MAP_PATH);
+    EXPECT_EQ(v.size(),10);
+    for (int i = 0; i < 10; i++) {
+        EXPECT_TRUE(testRightCountOfBlank(v[i],std::pair<int,int>(20,32)));
+    }
+}
 ```
+
+发现了下面的错误:
+
+挖洞过程的循环应为` while (holeNum--)`
+
+```c++
+    for (auto &board: boards) {
+        holeNum = dis(gen);
+        while (--holeNum) {
+            int x = rd0to8();
+            int y = rd0to8();
+            while (board[x][y] == 0) {
+                x = rd0to8();
+                y = rd0to8();
+            }
+            board[x][y] = 0;
+        }
+    }
+```
+
+## 覆盖率测试
+
+对`test.cpp`运行所有测试用例，得到结果如下图所示
+
+![image-20230630075855364](README.assets/image-20230630075855364.png)

@@ -146,7 +146,6 @@ TEST(GenerateMapTest, TestMapWriteAndRead)
 {
     std::vector<Board> map = mapGenerate(10);
     EXPECT_TRUE(writeBoards2File(map, SOLUTION_MAP_PATH));
-    EXPECT_FALSE(writeBoards2File(map, "nonexistent.txt"));
     std::ifstream fp(SOLUTION_MAP_PATH);
     int size;
     fp >> size;

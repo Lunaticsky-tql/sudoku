@@ -174,7 +174,7 @@ Command parseArgs(int argc, const char *argv[]) {
                     throw ParseArgException("No range provided\nUsage: sudoku.exe -n <number> -r xx~xx");
                 }
             }
-            return { GENERATE_SUDOKU, num };
+            return { GENERATE_SUDOKU, num ,EASY };
         } else {
             throw ParseArgException("Invalid command provided\nUsage: sudoku.exe <command> [options]");
         }
@@ -191,7 +191,36 @@ void distributeTask(const Command &command) {
         case GENERATE_SOLUTION_MAP:
             if(mapGenerate(command.gameNumber)){
                 std::cout << "Solution map generated successfully!" << std::endl;
+                std::cout << "Please check "<< SOLUTION_MAP_PATH << std::endl;
             }
+            break;
+        case GENERATE_SUDOKU:
+            mapGenerate(command.gameNumber);
+            if (command.isUnique) {
+                
+            }
+            else if (command.gameDifficulty == EASY) {
+                if (generateQuesN(command.gameNumber)) {
+                    std::cout << "Quertion generated successfully!" << std::endl;
+                    std::cout << "Please check " << QUESTION_PATH << std::endl;
+                }
+            }
+            else if (command.gameDifficulty == MEDIUM) {
+                if (generateQuesM(command.gameNumber, MEDIUM)) {
+                    std::cout << "Quertion generated successfully!" << std::endl;
+                    std::cout << "Please check " << QUESTION_PATH << std::endl;
+                }
+            }
+            else if (command.gameDifficulty == HARD) {
+                if (generateQuesM(command.gameNumber, HARD)) {
+                    std::cout << "Quertion generated successfully!" << std::endl;
+                    std::cout << "Please check " << QUESTION_PATH << std::endl;
+                }
+            }
+            else {
+                //std::cout << "Hole range: " << command.holeRange.first << "~" << command.holeRange.second << std::endl;
+            }
+
             break;
         default:
             break;

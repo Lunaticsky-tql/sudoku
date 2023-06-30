@@ -1,6 +1,6 @@
 # 南开2020软件工程结对编程
 
-:thumbsup:数独程序源代码已上传至[github](https://github.com/Lunaticsky-tql/sudoku.git)（https://github.com/Lunaticsky-tql/sudoku.git）仓库。
+:thumbsup:数独程序源代码已上传至[github](https://github.com/Lunaticsky-tql/sudoku.git)(https://github.com/Lunaticsky-tql/sudoku.git)仓库。
 
 小组成员：田翔宇 2011748 , 田佳业 2013599 
 

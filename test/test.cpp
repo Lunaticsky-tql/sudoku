@@ -211,14 +211,13 @@ TEST(SolverTest, TestSolve)
     std::vector games=generateGame(mapGenerate(1), 20, 32);
 
     v= solveSudoku(std::move(games));
-//    for(const auto& i:v)
-//    {
-//        for(auto j:i)
-//        {
-//
-//            EXPECT_TRUE(testLegalSolutionMap(j));
-//        }
-//    }
+    for(const auto& i:v)
+    {
+        for(auto j:i)
+        {
+            EXPECT_TRUE(testLegalSolutionMap(j));
+        }
+    }
 
 }
 
@@ -249,7 +248,24 @@ TEST(VectorTest, TestVector)
     v.push_back(v2);
     EXPECT_EQ(v.size(), 2);
 }
-
+TEST(GenerateGameTest,TestUnique){
+    Command c1(GENERATE_SUDOKU, 5,true);
+    c1.showCommand();
+    EXPECT_TRUE(distributeTask(c1));
+    std::vector<Board> v;
+    v = readBoardsFromFile(GAME_MAP_PATH);
+    EXPECT_EQ(v.size(), 5);
+    std::vector<std::vector<Board>> v1;
+    v1=solveSudoku(std::move(v));
+    for(const auto& i:v1)
+    {
+        EXPECT_EQ(i.size(),1);
+        for(const auto& j:i)
+        {
+            EXPECT_TRUE(testLegalSolutionMap(j));
+        }
+    }
+}
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

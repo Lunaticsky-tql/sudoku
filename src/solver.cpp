@@ -38,7 +38,7 @@ void SudoSolver::dfs(Board& board, int pos){
     if (pos == spaces.size())
     {
 //        board.printBoard();
-        results.push_back(board);
+        results.emplace_back(board);
         return;
     }
     auto[i, j] = spaces[pos];

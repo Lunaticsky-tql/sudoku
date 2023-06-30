@@ -37,7 +37,7 @@ void SudoSolver::clearState(){
 void SudoSolver::dfs(Board& board, int pos){
     if (pos == spaces.size())
     {
-//        board.printBoard();
+        board.printBoard();
         results.emplace_back(board);
         return;
     }

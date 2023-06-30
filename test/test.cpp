@@ -213,7 +213,7 @@ TEST(SolverTest, TestSolve)
     v= solveSudoku(std::move(games));
     for(const auto& i:v)
     {
-        for(auto j:i)
+        for(const auto& j:i)
         {
             EXPECT_TRUE(testLegalSolutionMap(j));
         }

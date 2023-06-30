@@ -53,10 +53,7 @@ void SudoSolver::dfs(Board& board, int pos){
     }
 }
 
-bool SudoSolver::checkUnique(Board &board){
-    solve(board);
-    return results.size() == 1;
-}
+
 
 
 

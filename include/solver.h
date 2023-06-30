@@ -18,7 +18,6 @@ public:
     void dfs(Board &board, int pos);
     void flip(int i, int j, int digit);
     void clearState();
-    bool checkUnique(Board &board);
 };
 
 #endif
